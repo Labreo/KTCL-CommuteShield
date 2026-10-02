@@ -1,0 +1,73 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Sensitive user data, credentials & cards (CRITICAL - DO NOT SHARE/COMMIT)
+.env
+.env.*
+!.env.example
+*.local.json
+credentials.json
+personal_data/
+card_details.json
+*.pem
+*.key
+*.token
+private/
+secrets/
+
+# Scanned ID Cards, Student Transit Passes, Personal Photos
+*.jpg
+*.jpeg
+*.heic
+*.webp
+*.raw
+*card*photo*
+*transit_card*
+*smart_card*
+*student_id*
+*WARADKAR*
+*waradkar*
+*ST25*
+
+# Allow only explicit project assets/ if created later
+!assets/*.png
+!assets/*.svg
+
+# IDE & OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs & temporary files
+*.log
+scratch/
+tmp/

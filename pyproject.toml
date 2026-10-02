@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ktcl-commuteshield"
+version = "1.0.0"
+description = "Open-Source AI Bus Card Exhaustion & Stranded Risk Forecaster for Goa Students"
+readme = "README.md"
+authors = [{ name = "Kanak Sanjay Waradkar", email = "kanak@example.com" }]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.6.0",
+    "rich>=13.7.0",
+    "google-search-results>=2.4.2",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "scikit-learn>=1.4.0",
+    "tabpfn>=2.0.0",
+]
+
+[project.scripts]
+commuteshield = "cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
