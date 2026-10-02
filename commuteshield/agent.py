@@ -92,8 +92,10 @@ class CommuteShieldAgent:
 
         # Step 6: Dispatch notifications if risk is elevated
         dispatched_telegram = False
+        dispatched_twilio = False
         if prediction.is_high_risk:
             dispatched_telegram = self.notifier.send_telegram(alert_msg)
+            dispatched_twilio = self.notifier.send_twilio_whatsapp(alert_msg)
 
         # Visual console display
         self.notifier.dispatch_console(
@@ -121,6 +123,7 @@ class CommuteShieldAgent:
             "serpapi_source": transit_report.source,
             "is_live_sync": card_status.is_live_sync,
             "telegram_sent": dispatched_telegram,
+            "twilio_sent": dispatched_twilio,
         }
         self.notifier.log_telemetry(telemetry_record)
 

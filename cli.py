@@ -187,6 +187,64 @@ def cmd_telegram_test(args):
         console.print(f"[red]Exception while contacting Telegram API: {e}[/red]")
 
 
+def cmd_twilio_test(args):
+    """Test Twilio API credentials and dispatch a test WhatsApp alert."""
+    print_banner()
+    import requests
+
+    sid = Config.TWILIO_ACCOUNT_SID
+    token = Config.TWILIO_AUTH_TOKEN
+    to_num = args.to or Config.TWILIO_WHATSAPP_TO
+    from_num = Config.TWILIO_WHATSAPP_FROM or "whatsapp:+14155238886"
+
+    if not sid or not token:
+        console.print("[red]❌ TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN missing in .env[/red]")
+        return
+
+    console.print(f"[cyan]Verifying Twilio credentials for Account: {sid[:8]}...[/cyan]\n")
+    try:
+        resp = requests.get(
+            f"https://api.twilio.com/2010-04-01/Accounts/{sid}.json",
+            auth=(sid, token),
+            timeout=8.0,
+        )
+        if resp.status_code != 200:
+            console.print(f"[bold red]❌ Twilio Auth Error ({resp.status_code}):[/bold red] {resp.text}")
+            return
+
+        acc_data = resp.json()
+        console.print(f"[bold green]✓ Twilio Account Verified:[/bold green] {acc_data.get('friendly_name')} (Status: {acc_data.get('status')}, Type: {acc_data.get('type')})")
+
+        if to_num:
+            if not from_num.startswith("whatsapp:"):
+                from_num = f"whatsapp:{from_num}"
+            if not to_num.startswith("whatsapp:"):
+                to_num = f"whatsapp:{to_num}"
+
+            console.print(f"[cyan]Sending test WhatsApp message to {to_num} via {from_num}...[/cyan]")
+            msg_resp = requests.post(
+                f"https://api.twilio.com/2010-04-01/Accounts/{sid}/Messages.json",
+                auth=(sid, token),
+                data={
+                    "From": from_num,
+                    "To": to_num,
+                    "Body": "🚨 *KTCL CommuteShield Test Alert*\n\nYour Twilio WhatsApp dispatcher is successfully connected! You will receive bus card balance alerts before the 11:59 PM depot cutoff.",
+                },
+                timeout=8.0,
+            )
+            if msg_resp.status_code in (200, 201):
+                console.print(f"[bold green]✓ WhatsApp alert sent successfully to {to_num}![/bold green]")
+            else:
+                console.print(f"[yellow]⚠️ Twilio message delivery status ({msg_resp.status_code}): {msg_resp.text}[/yellow]")
+        else:
+            console.print("\n[bold yellow]👉 Next Step: Set your WhatsApp recipient number in .env[/bold yellow]")
+            console.print("Add: [cyan]TWILIO_WHATSAPP_TO=whatsapp:+91XXXXXXXXXX[/cyan]")
+            console.print("(If using Twilio Sandbox, make sure you send 'join <sandbox-code>' to +1 415 523 8886 first)")
+
+    except Exception as e:
+        console.print(f"[red]Exception while contacting Twilio API: {e}[/red]")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="KTCL CommuteShield - AI Bus Card Exhaustion Forecaster"
@@ -213,6 +271,10 @@ def main():
     # telegram-test command
     subparsers.add_parser("telegram-test", help="Test Telegram bot token and setup chat ID")
 
+    # twilio-test command
+    twilio_parser = subparsers.add_parser("twilio-test", help="Test Twilio WhatsApp connection")
+    twilio_parser.add_argument("--to", type=str, help="Recipient phone number (e.g. +919876543210)")
+
     args = parser.parse_args()
 
     if args.command == "run" or args.command is None:
@@ -225,6 +287,8 @@ def main():
         cmd_diagnostics(args)
     elif args.command == "telegram-test":
         cmd_telegram_test(args)
+    elif args.command == "twilio-test":
+        cmd_twilio_test(args)
     else:
         parser.print_help()
 

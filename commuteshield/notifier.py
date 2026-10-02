@@ -135,6 +135,35 @@ class CommuteShieldNotifier:
             logger.warning("Failed to dispatch Telegram message: %s", str(e))
             return False
 
+    def send_twilio_whatsapp(self, message: str) -> bool:
+        """Send message via Twilio WhatsApp API if configured."""
+        sid = Config.TWILIO_ACCOUNT_SID
+        token = Config.TWILIO_AUTH_TOKEN
+        from_num = Config.TWILIO_WHATSAPP_FROM or "whatsapp:+14155238886"
+        to_num = Config.TWILIO_WHATSAPP_TO
+
+        if not sid or not token or not to_num:
+            logger.info("Twilio WhatsApp skipped (missing credentials or recipient phone number in .env).")
+            return False
+
+        if not from_num.startswith("whatsapp:"):
+            from_num = f"whatsapp:{from_num}"
+        if not to_num.startswith("whatsapp:"):
+            to_num = f"whatsapp:{to_num}"
+
+        url = f"https://api.twilio.com/2010-04-01/Accounts/{sid}/Messages.json"
+        data = {
+            "From": from_num,
+            "To": to_num,
+            "Body": message,
+        }
+        try:
+            resp = requests.post(url, data=data, auth=(sid, token), timeout=8.0)
+            return resp.status_code in (200, 201)
+        except Exception as e:
+            logger.warning("Failed to dispatch Twilio WhatsApp message: %s", str(e))
+            return False
+
     def log_telemetry(self, alert_data: dict):
         """Append alert telemetry to local log for privacy-preserving auditing."""
         entry = {
