@@ -10,6 +10,7 @@ gradient-boosted trees and neural nets overfit.
 """
 
 import logging
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
@@ -64,23 +65,26 @@ class TabPFNCommuteEngine:
         self.X_train = df[FEATURE_COLUMNS].values.astype(float)
         self.y_train = df[TARGET_COLUMN].values.astype(int)
 
-        # Attempt to load TabPFN foundation model
-        try:
-            import os
-            if Config.TABPFN_TOKEN:
-                os.environ["TABPFN_TOKEN"] = Config.TABPFN_TOKEN
-            from tabpfn import TabPFNClassifier
-            logger.info("Initializing Prior Labs TabPFNClassifier (device='cpu')...")
-            self.classifier = TabPFNClassifier(device="cpu", n_estimators=4)
-            self.classifier.fit(self.X_train, self.y_train)
-            self.is_tabpfn_active = True
-            logger.info("TabPFN in-context model loaded successfully on %d commute records.", len(df))
-        except Exception as e:
-            logger.warning(
-                "TabPFN foundation model load deferred (%s). Preparing calibrated Bayesian fallback.",
-                str(e),
-            )
-            # Calibrated ensemble fallback
+        # Attempt to load TabPFN foundation model if token configured
+        token = Config.TABPFN_TOKEN or os.getenv("TABPFN_TOKEN")
+        if token:
+            try:
+                os.environ["TABPFN_TOKEN"] = token
+                from tabpfn import TabPFNClassifier
+                logger.info("Initializing Prior Labs TabPFNClassifier with TABPFN_TOKEN...")
+                self.classifier = TabPFNClassifier(device="cpu", n_estimators=4)
+                self.classifier.fit(self.X_train, self.y_train)
+                self.is_tabpfn_active = True
+                logger.info("TabPFN in-context model loaded successfully on %d commute records.", len(df))
+            except Exception as e:
+                logger.warning(
+                    "TabPFN foundation model load deferred (%s). Preparing calibrated Bayesian fallback.",
+                    str(e),
+                )
+                self.is_tabpfn_active = False
+
+        if not self.is_tabpfn_active:
+            # Calibrated ensemble fallback (reproducible, zero-cloud dependency)
             from sklearn.ensemble import HistGradientBoostingClassifier
             from sklearn.calibration import CalibratedClassifierCV
             base = HistGradientBoostingClassifier(random_state=42, max_iter=50)

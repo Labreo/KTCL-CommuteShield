@@ -74,8 +74,18 @@ class CommuteShieldNotifier:
         is_live_sync: bool,
     ):
         """Render a rich visual alert in the terminal."""
-        risk_color = "red" if p_stranded >= 0.60 else "yellow" if p_stranded >= 0.35 else "green"
-        risk_badge = f"[{risk_color} bold]CRITICAL RISK: {p_stranded * 100:.1f}%[/{risk_color} bold]"
+        is_risky = p_stranded >= 0.60 or shortfall > 0
+        if p_stranded >= 0.60 or shortfall > 20.0:
+            risk_color = "red"
+            risk_title = "CRITICAL RISK"
+        elif p_stranded >= 0.35 or shortfall > 0:
+            risk_color = "yellow"
+            risk_title = "MODERATE RISK"
+        else:
+            risk_color = "green"
+            risk_title = "SAFE"
+
+        risk_badge = f"[{risk_color} bold]{risk_title}: {p_stranded * 100:.1f}%[/{risk_color} bold]"
 
         table = Table(show_header=False, box=None, padding=(0, 2))
         table.add_column("Key", style="cyan bold")
@@ -85,15 +95,21 @@ class CommuteShieldNotifier:
         table.add_row("Card Balance", f"₹{balance:.2f} ({'Live Portal' if is_live_sync else 'Offline Cached'})")
         table.add_row("Stranded Probability", risk_badge)
         table.add_row("Projected Shortfall", f"₹{shortfall:.2f}")
-        table.add_row("Recommended Top-Up", f"[bold green]₹{recommended_topup:.0f}[/bold green]")
+        table.add_row("Recommended Top-Up", f"[bold green]₹{recommended_topup:.0f}[/bold green]" if recommended_topup > 0 else "[green]₹0 (Sufficient)[/green]")
         table.add_row("Goa Transit Intel", disruption_status)
         table.add_row("Inference Model", model_name)
         table.add_row("Risk Factors", explanation)
-        table.add_row("Depot Sync Cutoff", "[bold red]11:59 PM IST Tonight[/bold red]")
+        table.add_row("Depot Sync Cutoff", "[bold red]11:59 PM IST Tonight[/bold red]" if is_risky else "[dim]11:59 PM IST Tonight[/dim]")
+
+        panel_title = (
+            "[bold red]🚨 KTCL CommuteShield - Proactive Emergency Alert[/bold red]"
+            if is_risky
+            else "[bold green]🛡️ KTCL CommuteShield - Commute Clear & Safe[/bold green]"
+        )
 
         panel = Panel(
             table,
-            title="[bold red]🚨 KTCL CommuteShield - Proactive Transit Protection[/bold red]",
+            title=panel_title,
             subtitle="[dim]Powered by Prior Labs TabPFN & SerpApi Transit Grounding[/dim]",
             border_style=risk_color,
             expand=False,
