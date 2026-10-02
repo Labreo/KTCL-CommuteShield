@@ -142,8 +142,8 @@ def cmd_telegram_test(args):
         data = me_resp.json()
         if not data.get("ok"):
             console.print(f"[bold red]❌ Telegram API Error ({data.get('error_code')}):[/bold red] {data.get('description')}")
-            console.print("[yellow]Tip: Please check the token copied from @BotFather in Telegram.")
-            console.print("Make sure there are no accidental spaces, missing characters, or OCR typos in your .env file.[/yellow]")
+            console.print("[yellow]Tip: Please check the token copied from @BotFather in Telegram.[/yellow]")
+            console.print("[yellow]Make sure there are no accidental spaces, missing characters, or OCR typos in your .env file.[/yellow]")
             return
 
         bot_info = data.get("result", {})
