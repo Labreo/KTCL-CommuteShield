@@ -124,6 +124,69 @@ def cmd_diagnostics(args):
     console.print(table)
 
 
+def cmd_telegram_test(args):
+    """Test Telegram bot connection and assist in linking chat ID."""
+    print_banner()
+    import requests
+
+    token = Config.TELEGRAM_BOT_TOKEN
+    chat_id = Config.TELEGRAM_CHAT_ID
+
+    if not token:
+        console.print("[red]❌ TELEGRAM_BOT_TOKEN is not configured in .env[/red]")
+        return
+
+    console.print(f"[cyan]Testing Telegram bot connection with token: {token[:10]}...[/cyan]\n")
+    try:
+        me_resp = requests.get(f"https://api.telegram.org/bot{token}/getMe", timeout=8.0)
+        data = me_resp.json()
+        if not data.get("ok"):
+            console.print(f"[bold red]❌ Telegram API Error ({data.get('error_code')}):[/bold red] {data.get('description')}")
+            console.print("[yellow]Tip: Please check the token copied from @BotFather in Telegram.")
+            console.print("Make sure there are no accidental spaces, missing characters, or OCR typos in your .env file.[/yellow]")
+            return
+
+        bot_info = data.get("result", {})
+        console.print(f"[bold green]✓ Successfully connected to bot:[/bold green] @{bot_info.get('username')} ({bot_info.get('first_name')})")
+
+        # Check chat ID
+        if chat_id:
+            console.print(f"[cyan]Attempting to send test alert to Chat ID: {chat_id}...[/cyan]")
+            send_resp = requests.post(
+                f"https://api.telegram.org/bot{token}/sendMessage",
+                json={
+                    "chat_id": chat_id,
+                    "text": "🛡️ *KTCL CommuteShield Test Alert*\n\nYour Telegram bot is successfully connected and ready to send bus card exhaustion warnings before 11:59 PM!",
+                    "parse_mode": "Markdown",
+                },
+                timeout=8.0,
+            )
+            if send_resp.status_code == 200:
+                console.print("[bold green]✓ Test alert delivered successfully to your Telegram chat![/bold green]")
+            else:
+                console.print(f"[yellow]⚠️ Could not deliver message to chat ID {chat_id}: {send_resp.text}[/yellow]")
+        else:
+            console.print("\n[bold yellow]👉 Next Step: Link your Telegram Chat ID[/bold yellow]")
+            console.print(f"1. Open Telegram and search for: [bold cyan]@{bot_info.get('username')}[/bold cyan]")
+            console.print(f"2. Tap [bold green]Start[/bold green] (or send any message like 'hello')")
+            console.print("3. Checking for incoming messages right now...")
+
+            upd_resp = requests.get(f"https://api.telegram.org/bot{token}/getUpdates", timeout=8.0)
+            upd_data = upd_resp.json()
+            messages = upd_data.get("result", [])
+            if messages:
+                detected_chat = messages[-1].get("message", {}).get("chat", {})
+                detected_id = detected_chat.get("id")
+                detected_user = detected_chat.get("first_name", "")
+                console.print(f"[bold green]✓ Found incoming message from {detected_user}! Chat ID: {detected_id}[/bold green]")
+                console.print(f"[cyan]Add this to your .env: TELEGRAM_CHAT_ID={detected_id}[/cyan]")
+            else:
+                console.print("[dim]No messages detected yet. Once you send /start to the bot, re-run: .venv/bin/python cli.py telegram-test[/dim]")
+
+    except Exception as e:
+        console.print(f"[red]Exception while contacting Telegram API: {e}[/red]")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="KTCL CommuteShield - AI Bus Card Exhaustion Forecaster"
@@ -147,6 +210,9 @@ def main():
     # diagnostics command
     subparsers.add_parser("diagnostics", help="Inspect privacy & environment settings")
 
+    # telegram-test command
+    subparsers.add_parser("telegram-test", help="Test Telegram bot token and setup chat ID")
+
     args = parser.parse_args()
 
     if args.command == "run" or args.command is None:
@@ -157,6 +223,8 @@ def main():
         cmd_transit(args)
     elif args.command == "diagnostics":
         cmd_diagnostics(args)
+    elif args.command == "telegram-test":
+        cmd_telegram_test(args)
     else:
         parser.print_help()
 
