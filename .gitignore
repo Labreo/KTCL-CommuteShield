@@ -66,6 +66,8 @@ secrets/
 .idea/
 *.swp
 *~
+Untitled*
+
 
 # Logs & temporary files
 *.log
