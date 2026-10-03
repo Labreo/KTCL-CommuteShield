@@ -2,9 +2,9 @@
 *Optimized for ElevenLabs Text-to-Speech (TTS) & Video Walkthrough Production*
 *Hacktoberfest Weekend Challenge: Build for a Friend*
 
-- **Target Completion**: **~2:20** (140 seconds)
+- **Target Completion**: **~2:38** (158 seconds)
 - **Hard Ceiling**: **3:00** (180 seconds)
-- **Recorded Pacing**: ~2.5 - 2.9 words per second (~160 words per minute)
+- **Recorded Pacing**: ~2.0 - 2.5 words per second (~135 words per minute)
 - **Total Word Budget**: **355 words**
 - **Pronunciation Guide**:
   - `KTCL` → `K-T-C-L`
@@ -129,7 +129,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [0:50 - 1:15] SCENE 3: Demo 1 — Evening Assessment & TabPFN Bayesian Inference
+### [0:50 - 1:21] SCENE 3: Demo 1 — Evening Assessment & TabPFN Bayesian Inference
 
 **On-Screen Action**:
 - In the terminal, execute:
@@ -145,7 +145,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
   - `Projected Shortfall: ₹64.50`
   - `Recommended Top-Up: ₹100`
 
-**Voiceover Audio** (62 words, ~25 seconds):
+**Voiceover Audio** (62 words, 31 seconds verified):
 > "CommuteShield runs locally on his laptop every evening at eight P-M I-S-T.
 > 
 > It queries the live K-T-C-L portal, checks his timetable, and pulls highway conditions through Serp-A-P-I.
@@ -158,7 +158,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [1:15 - 1:43] SCENE 4: Demo 2 — Live Telegram Alert & Anti-Fatigue Filtering
+### [1:21 - 1:56] SCENE 4: Demo 2 — Live Telegram Alert & Anti-Fatigue Filtering
 
 **On-Screen Action**:
 - Cut to phone screen capture showing real-time Telegram notification from `@ktcl_commuteshield_bot`.
@@ -172,7 +172,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
   ```
 - Show green panel: `SAFE: 23.5%` with zero Telegram spam.
 
-**Voiceover Audio** (69 words, ~28 seconds):
+**Voiceover Audio** (69 words, 35 seconds verified):
 > "Let us test a live scenario.
 > 
 > Tejas has eighteen rupees remaining on Friday evening, with a scheduled football match at Wadi turf tomorrow.
@@ -189,7 +189,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [1:43 - 2:07] SCENE 5: Demo 3 — SerpApi Highway Grounding & Anti-Fatigue Proof
+### [1:56 - 2:23] SCENE 5: Demo 3 — SerpApi Highway Grounding & Anti-Fatigue Proof
 
 **On-Screen Action**:
 - Open SerpApi inspection CLI:
@@ -200,7 +200,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 - Show dynamic disruption multiplier adjusting from 1.0x to 1.35x.
 - Show `cli.py simulate` showing all 3 scenarios verified.
 
-**Voiceover Audio** (59 words, ~24 seconds):
+**Voiceover Audio** (59 words, ~27 seconds):
 > "Next, watch how CommuteShield defeats notification fatigue on light days.
 > 
 > On Tuesday, Tejas has twenty-five rupees and only one morning lecture.
@@ -215,14 +215,14 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [2:07 - 2:20] SCENE 6: Local Edge Sovereignty & Closing Punchline
+### [2:23 - 2:38] SCENE 6: Local Edge Sovereignty & Closing Punchline
 
 **On-Screen Action**:
 - Show terminal running offline with network disconnected to prove local TabPFN weight execution.
 - Display `pytest` passing all 14 tests in the terminal.
 - Return to GitHub repository page (`Labreo/KTCL-CommuteShield`) with closing title card and DEV challenge submission badge.
 
-**Voiceover Audio** (32 words, ~13 seconds):
+**Voiceover Audio** (32 words, ~15 seconds):
 > "Personal travel logs contain sensitive daily movements.
 > 
 > Running Tab-P-F-N locally protects Tejas's privacy, requires zero cloud subscriptions, and prevents stranded mornings.
@@ -234,6 +234,6 @@ Thank you for reviewing K-T-C-L CommuteShield.
 ## Audio Production & Video Assembly Checklist
 
 1. **Audio Generation**: In ElevenLabs, select an articulate narrator voice (e.g. *Adam*, *Brian*, or *George*) with stability at `65%` and clarity at `75%`.
-2. **Timing Confirmation**: The raw audio runs at `~2:20`, leaving a comfortable `~40-second` safety cushion before the 3:00 hard ceiling.
+2. **Timing Confirmation**: The raw audio runs at `~2:38`, leaving a comfortable `~22-second` safety cushion before the 3:00 hard ceiling.
 3. **Screen Recording**: Record the terminal commands and Telegram screen captures at `1080p60` with font zoom set to 125% for mobile clarity.
 4. **Volume Levels**: Keep background music (ambient synth or low lo-fi) at `-22 dB` beneath the voiceover at `-1 dB`.
