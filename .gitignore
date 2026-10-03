@@ -56,9 +56,8 @@ secrets/
 *waradkar*
 *ST25*
 
-# Allow only explicit project assets/ if created later
-!assets/*.png
-!assets/*.svg
+# Video production assets & screenshots (sensitive card details)
+assets/
 
 # IDE & OS
 .DS_Store
