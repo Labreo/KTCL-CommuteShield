@@ -2,7 +2,6 @@
 title: "KTCL CommuteShield: Protecting College Friends from Getting Stranded with TabPFN & SerpApi"
 published: true
 tags: devchallenge, weekendchallenge, hf26challenge
-cover_image: https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/cover.png
 ---
 
 *This is a submission for the [Hacktoberfest Weekend Challenge: Build for a Friend](https://dev.to/challenges/hacktoberfest-weekend-2026-10-01)*
