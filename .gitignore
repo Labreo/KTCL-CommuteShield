@@ -62,6 +62,7 @@ SUBMISSION.md
 demoscript.md
 DEMO_SCRIPT.md
 demo_script.md
+agent_session*.json
 
 # Video production media binaries & subtitles
 *.mp4
