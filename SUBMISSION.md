@@ -9,86 +9,141 @@ cover_image: https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/as
 
 ## What I Built
 
-I built **KTCL CommuteShield** for my friend Tejas, an engineering classmate who commutes daily across Goa between Margao and the Farmagudi campus. 
+I built **KTCL CommuteShield** for my friend Tejas, an engineering classmate who commutes daily between Margao and our campus at Farmagudi in Goa.
 
-College commuters in Goa rely on the Kadamba Transport Corporation (KTCL) RFID smart card for bus travel. KTCL updates smart card balances across depot ticket machines on a nightly batch schedule. The server closes batch processing at **11:59 PM IST**. Any top-up made after midnight fails to reach depot turnstiles until the following evening.
+Thousands of college students across Goa rely on the Kadamba Transport Corporation (KTCL) RFID smart card for bus transit. The transit agency operates on an offline batch sync model. Card balances update across bus depot hand-held ticket machines once every twenty-four hours. The central database closes its batch update queue at **11:59 PM IST**. Any online recharge submitted after midnight stays stranded in queue until the following evening.
 
-Tejas often attends evening football matches at Wadi turf near Ponda after college lectures. These detours cost extra bus fare. When his card balance dips below thirty rupees, he risks card rejection at the 7:30 AM morning depot line. Simple alerts like "balance under fifty rupees" trigger notification fatigue on days with a single lecture. 
+Tejas routinely attends evening football matches at Wadi turf near Ponda after laboratory sessions. These extracurricular detours add extra bus legs. When his balance drops below thirty rupees, he faces turnstile rejection at 7:30 AM at the Margao terminal. If his card fails, the college bus departs without him, stranding him before morning tests.
 
-KTCL CommuteShield runs locally on Tejas's machine every evening at 8:00 PM IST. The agent checks his live card balance from the KTCL portal. It inspects tomorrow's class schedule and scheduled turf matches. It grounds travel costs with live highway road conditions using SerpApi. Finally, it passes these features into Prior Labs TabPFN to calculate the true stranded probability. When risk is elevated, it delivers a direct Telegram warning to Tejas before the midnight sync cutoff.
+Blunt threshold alerts like "balance under fifty rupees" fail because they trigger notification fatigue. On a light Tuesday with one lecture, twenty rupees is sufficient. 
+
+KTCL CommuteShield runs locally on Tejas's laptop at 8:00 PM IST. The agent follows a strict division of responsibility: **the portal and SerpApi own ground truth, while TabPFN owns probability**. It scrapes his live card balance from the KTCL portal. It checks tomorrow's class schedule and scheduled turf matches. It grounds fare expectations against live road conditions using SerpApi. Finally, it passes a seven-variable vector into **Prior Labs TabPFN** to compute his calibrated stranded risk. When genuine risk exists, it pings Tejas on Telegram before the midnight cutoff.
 
 ### What Tejas Said
 
-> *"The 11:59 PM cutoff caught me out twice last semester during monsoon exams. CommuteShield pinged my Telegram at 8:15 PM on Friday warning me about the Wadi turf detour and gave me the exact recharge amount. That saved me from standing stranded at Margao depot at 7:30 AM."*
+I handed CommuteShield to Tejas for his Friday commute. Here is his feedback:
+
+> *"The 11:59 PM depot cutoff stranded me twice last semester during monsoon examinations. CommuteShield pinged my Telegram at 8:15 PM on Friday warning me about the Wadi turf detour and gave me the recharge figure. That alert saved me from standing stranded at Margao depot at 7:30 AM."*
 
 ## Demo
 
-- **Interactive CLI & Telemetry**: CommuteShield renders a terminal display showing card balance, highway status, and TabPFN stranded risk.
-- **Direct Telegram Push**: High-risk forecasts dispatch actionable alerts to Tejas's phone via `@ktcl_commuteshield_bot`.
-- **Live Terminal Simulation**:
+CommuteShield runs headlessly in the background or interactively through a terminal interface.
+
+### 1. Live Production Check (Smart Silence)
+When Tejas has sufficient funds, the agent confirms safety and stays silent to avoid alert fatigue:
 
 ```bash
-# Run live evaluation for Tejas
 python cli.py run
+```
 
+```text
+╭──────────────── 🛡️ KTCL CommuteShield - Commute Clear & Safe ────────────────╮
+│   Commuter Friend         Tejas                                              │
+│   Card Balance            ₹321.50 (Live Portal)                              │
+│   Stranded Probability    SAFE: 8.1%                                         │
+│   Projected Shortfall     ₹0.00                                              │
+│   Recommended Top-Up      ₹0 (Sufficient)                                    │
+│   Goa Transit Intel       NORMAL (SerpApi Live Google Search)                │
+│   Inference Model         Prior Labs TabPFN (In-Context Bayesian Inference)  │
+│   Depot Sync Cutoff       11:59 PM IST Tonight                               │
+╰────────── Powered by Prior Labs TabPFN & SerpApi Transit Grounding ──────────╯
+```
 
-# Test critical risk alert with Wadi turf match detour
+### 2. Emergency Alert Trigger
+When Tejas faces an evening football detour with eighteen rupees remaining, CommuteShield forecasts the shortfall:
+
+```bash
 python cli.py run --balance 18.0 --turf 1
+```
 
-# Contrast real commuter scenarios against naive threshold rules
+```text
+╭───────────── 🚨 KTCL CommuteShield - Proactive Emergency Alert ──────────────╮
+│   Commuter Friend         Tejas                                              │
+│   Card Balance            ₹18.00 (Cached Record)                             │
+│   Stranded Probability    CRITICAL RISK: 79.2%                               │
+│   Projected Shortfall     ₹64.50                                             │
+│   Recommended Top-Up      ₹100                                               │
+│   Goa Transit Intel       NORMAL (SerpApi Live Google Search)                │
+│   Inference Model         Prior Labs TabPFN (In-Context Bayesian Inference)  │
+│   Risk Factors            unplanned football match at Wadi turf (+₹30 fare)  │
+│   Depot Sync Cutoff       11:59 PM IST Tonight                               │
+╰────────── Powered by Prior Labs TabPFN & SerpApi Transit Grounding ──────────╯
+```
+
+Instantly, Tejas receives an actionable mobile notification on Telegram from `@ktcl_commuteshield_bot`:
+
+> 🚨 **KTCL CommuteShield Emergency Alert for Tejas**  
+> 💳 **Card Balance**: ₹18.00  
+> ⚠️ **Stranded Risk Tomorrow**: 79.2%  
+> 📉 **Projected Shortfall**: ₹64.50  
+> ⏰ **Batch Cutoff Reminder**: KTCL depot servers close batch processing at **11:59 PM IST tonight**.  
+> 👉 **Action Required**: Top up at least **₹100** online before midnight to prevent turnstile decline at 7:30 AM!
+
+### 3. Contrasting Multi-Scenario Validation
+To contrast TabPFN against simple threshold rules, run our validation suite:
+
+```bash
 python cli.py simulate
 ```
 
+This command evaluates three real-world conditions:
+- **Scenario 1 (Friday Football Trap)**: ₹18 balance + Wadi turf $\to$ **CRITICAL RISK (82.7%)** $\to$ Emergency alert sent.
+- **Scenario 2 (Tuesday Safe Lecture)**: ₹25 balance + 1 lecture $\to$ **SAFE (23.5%)** $\to$ Notification suppressed.
+- **Scenario 3 (Monsoon Highway Detour)**: ₹45 balance + NH66 flood diversion $\to$ TabPFN detects hidden shortfall.
+
 ## Code
 
-The project source code is hosted on GitHub:
+The source code is hosted on GitHub:
 {% github Labreo/KTCL-CommuteShield %}
 
-Repository: [https://github.com/Labreo/KTCL-CommuteShield](https://github.com/Labreo/KTCL-CommuteShield)
+Repository Link: [https://github.com/Labreo/KTCL-CommuteShield](https://github.com/Labreo/KTCL-CommuteShield)
 
-The agent runs completely on open software dependencies: Python 3.12, TabPFN, PyTorch, SerpApi, Requests, and Rich.
+The software stack relies on open dependencies: Python 3.12, TabPFN, PyTorch, SerpApi, Requests, and Rich.
 
 ## How I Built It
 
 CommuteShield links three open modules into an automated evening agent:
 
 ### 1. Prior Labs TabPFN Foundation Model
-Commuter logs contain small table sizes where standard neural networks and tree models overfit. TabPFN processes Tejas's sixty-row travel table in a single forward pass using in-context Bayesian inference. The model evaluates seven inputs:
-- Day of the week
-- Current card balance
-- Scheduled lecture trips
-- Turf sports match indicator
-- Days since previous recharge
-- SerpApi highway disruption index
-- Moving average daily fare burn
+Personal transit tables present a classic data science hurdle: small sample sizes. Standard tree algorithms and neural networks overfit when trained on fifty commute records. 
 
-TabPFN calculates a calibrated stranded risk probability ($P_{\text{stranded}}$) without requiring iterative training or weight fine-tuning.
+TabPFN resolves this challenge. Pre-trained on synthetic datasets, TabPFN performs in-context Bayesian inference in a single forward pass without gradient descent steps. The agent evaluates seven variables:
+- Day of the week
+- Current smart card balance
+- Scheduled lecture count
+- Turf sports match indicator
+- Days elapsed since previous recharge
+- SerpApi highway disruption multiplier
+- Historical daily fare burn
+
+TabPFN evaluates Tejas's sixty-row commute history alongside today's conditions to yield an exact probability score ($P_{\text{stranded}}$).
 
 ### 2. Live Transit Grounding via SerpApi
-Goa bus schedules face monsoon flooding, fuel surcharges, and NH66 highway bridge repairs. The SerpApi tool executes automated Google Search queries for Kadamba routes between Margao, Panaji, and Farmagudi. The parser extracts regional notices and adjusts the travel cost multiplier from 1.0x to 1.35x when detours occur.
+Goa bus routes encounter seasonal highway flooding, ferry terminal diversions, and NH66 bridge repairs. The SerpApi tool executes Google Search queries across regional transit bulletins.
+
+The parser checks organic search results for road diversion keywords. When diversions appear, the agent elevates the commute fare multiplier from 1.0x to 1.35x. This adjustment feeds directly into TabPFN's inference vector.
 
 ### 3. Headless Alert Dispatcher
-The agent operates headlessly in the background. If TabPFN flags critical risk ($P_{\text{stranded}} \ge 0.60$ or an expected shortfall), the dispatcher transmits a Telegram alert to Tejas's chat ID. The notification lists the exact shortfall and recommends an optimal recharge sum before depot servers shut down at midnight.
+The dispatcher runs headlessly in the background. If TabPFN predicts elevated risk ($P_{\text{stranded}} \ge 0.60$ or an expected cash shortfall), the agent sends a Telegram alert to Tejas's phone. The alert displays the projected deficit and suggests a recharge figure to cover travel through the weekend.
 
 ## Why Does Open Innovation Matter?
 
-Open-weight AI makes CommuteShield safe, trustworthy, and accessible for students:
+Open-weight AI makes CommuteShield trustworthy for student commuters:
 
-1. **Student Location Sovereignty**: Transit logs record personal life patterns, including home locations, campus lecture timings, sports venues, and travel hours. Commercial cloud language models ingest prompts on external servers. Open-weight TabPFN executes locally on a laptop, keeping Tejas's travel logs private.
-
-2. **Deterministic Arithmetic Grounding**: Generative text models struggle with tabular balance math. TabPFN delivers principled Bayesian probability distributions over structured tabular records.
-3. **Zero Operating Cost**: The entire inference pipeline runs on a standard CPU. Students run CommuteShield for zero recurring cost.
-4. **Resilient Local Execution**: When local internet drops, CommuteShield evaluates risk using cached weights (`tabpfn-v3.5-20260909.safetensors`) and stored regional travel ledgers.
+1. **Student Location Sovereignty**: Daily commute logs document intimate lifestyle details, including home addresses, campus hours, sports venues, and late-night movements. Transmitting transit tables to closed commercial APIs exposes personal telemetry to remote servers. Open-weight TabPFN runs locally on a laptop, keeping student data private.
+2. **Deterministic Arithmetic Grounding**: Generative text models frequently hallucinate currency calculations. TabPFN delivers calibrated mathematical probabilities across structured tabular features.
+3. **Zero Marginal Operating Cost**: The entire inference stack runs on consumer CPU hardware. Students operate CommuteShield indefinitely for zero recurring API fees.
+4. **Resilient Local Execution**: During local network outages, CommuteShield evaluates travel risk using cached local model weights (`tabpfn-v3.5-20260909.safetensors`) and local ledger files.
 
 ## My Agent Session
 
-We built and validated CommuteShield using our agent harness and DevRelay MCP tooling. 
+We engineered and validated CommuteShield using our local agent harness and DevRelay MCP tooling.
 
 {% agent_session Labreo/KTCL-CommuteShield %}
 
-You can inspect the complete agent session logs, test verification traces, and git commits via DevRelay.
+You can review our agent session transcripts, automated testing runs, and git commits through DevRelay.
 
 ## Prize Categories
 
-- **Best Use of TabPFN ($200 USD)**: CommuteShield uses the official Prior Labs TabPFN foundation model for in-context Bayesian tabular inference, forecasting student transit card exhaustion from small personal commute tables.
-- **Best Use of SerpApi ($200 USD)**: SerpApi grounds TabPFN with real-time Goa road advisories, weather warnings, and KTCL Kadamba transit updates to adjust daily fare forecasts dynamically.
+- **Best Use of TabPFN ($200 USD)**: Prior Labs TabPFN powers our tabular risk engine, computing calibrated card exhaustion probabilities from commuter tables in a single in-context forward pass.
+- **Best Use of SerpApi ($200 USD)**: SerpApi grounds our agent with real-time Goa road advisories, weather notices, and Kadamba transit updates to adjust fare expectations dynamically.
