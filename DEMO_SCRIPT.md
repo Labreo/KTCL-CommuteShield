@@ -2,9 +2,9 @@
 *Optimized for ElevenLabs Text-to-Speech (TTS) & Video Walkthrough Production*
 *Hacktoberfest Weekend Challenge: Build for a Friend*
 
-- **Target Completion**: **2:49** (169 seconds)
+- **Target Completion**: **~2:20** (140 seconds)
 - **Hard Ceiling**: **3:00** (180 seconds)
-- **Recorded Pacing**: ~2.1 words per second (~126 words per minute)
+- **Recorded Pacing**: ~2.5 - 2.9 words per second (~160 words per minute)
 - **Total Word Budget**: **355 words**
 - **Pronunciation Guide**:
   - `KTCL` → `K-T-C-L`
@@ -89,7 +89,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [0:00 - 0:31] SCENE 1: The Commuter Dilemma (The Narrative Hook)
+### [0:00 - 0:20] SCENE 1: The Commuter Dilemma (The Narrative Hook)
 
 **On-Screen Action**:
 - Open with a clean split view: a photo of the author's physical KTCL Kadamba smart card (used as the live demonstration instrument) alongside an authentic WhatsApp chat showing the 7:30 AM turnstile decline message.
@@ -97,7 +97,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 - Highlight Margao bus terminal and Farmagudi campus route on a stylized map.
 - *(Note: The physical card shown on screen belongs to author Kanak Waradkar, used safely as the live test instrument without exposing Tejas's credentials.)*
 
-**Voiceover Audio** (59 words, ~28 seconds):
+**Voiceover Audio** (59 words, 20 seconds verified):
 > "In Goa, thousands of college students rely on K-T-C-L smart cards for daily bus transit.
 > 
 > Bus depot servers update card balances on a nightly batch schedule.
@@ -108,7 +108,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [0:31 - 1:00] SCENE 2: Tejas's Routine & Introducing KTCL CommuteShield
+### [0:20 - 0:50] SCENE 2: Tejas's Routine & Introducing KTCL CommuteShield
 
 **On-Screen Action**:
 - Pan to student calendar showing college lectures and Friday evening football matches at Wadi turf near Ponda.
@@ -116,7 +116,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 - Show the local project repository structure (`commuteshield/` modules, local `.env`, and `friend_commute_history.csv`).
 - On-screen caption: *Live portal checks query author Kanak Waradkar's card for safe demonstration; calendar models Tejas's transit routine.*
 
-**Voiceover Audio** (74 words, ~35 seconds):
+**Voiceover Audio** (74 words, 30 seconds verified):
 > "My friend Tejas studies at Farmagudi campus and plays evening football matches at Wadi turf.
 > 
 > An unplanned match exhausts his bus balance.
@@ -129,7 +129,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [1:00 - 1:36] SCENE 3: Demo 1 — Evening Assessment & TabPFN Bayesian Inference
+### [0:50 - 1:15] SCENE 3: Demo 1 — Evening Assessment & TabPFN Bayesian Inference
 
 **On-Screen Action**:
 - In the terminal, execute:
@@ -145,7 +145,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
   - `Projected Shortfall: ₹64.50`
   - `Recommended Top-Up: ₹100`
 
-**Voiceover Audio** (62 words, ~29 seconds):
+**Voiceover Audio** (62 words, ~25 seconds):
 > "CommuteShield runs locally on his laptop every evening at eight P-M I-S-T.
 > 
 > It queries the live K-T-C-L portal, checks his timetable, and pulls highway conditions through Serp-A-P-I.
@@ -158,7 +158,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [1:36 - 2:06] SCENE 4: Demo 2 — Live Telegram Alert & Anti-Fatigue Filtering
+### [1:15 - 1:43] SCENE 4: Demo 2 — Live Telegram Alert & Anti-Fatigue Filtering
 
 **On-Screen Action**:
 - Cut to phone screen capture showing real-time Telegram notification from `@ktcl_commuteshield_bot`.
@@ -172,7 +172,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
   ```
 - Show green panel: `SAFE: 23.5%` with zero Telegram spam.
 
-**Voiceover Audio** (69 words, ~30 seconds):
+**Voiceover Audio** (69 words, ~28 seconds):
 > "Let us test a live scenario.
 > 
 > Tejas has eighteen rupees remaining on Friday evening, with a scheduled football match at Wadi turf tomorrow.
@@ -189,7 +189,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [2:06 - 2:34] SCENE 5: Demo 3 — SerpApi Highway Grounding & Anti-Fatigue Proof
+### [1:43 - 2:07] SCENE 5: Demo 3 — SerpApi Highway Grounding & Anti-Fatigue Proof
 
 **On-Screen Action**:
 - Open SerpApi inspection CLI:
@@ -200,7 +200,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 - Show dynamic disruption multiplier adjusting from 1.0x to 1.35x.
 - Show `cli.py simulate` showing all 3 scenarios verified.
 
-**Voiceover Audio** (59 words, ~27 seconds):
+**Voiceover Audio** (59 words, ~24 seconds):
 > "Next, watch how CommuteShield defeats notification fatigue on light days.
 > 
 > On Tuesday, Tejas has twenty-five rupees and only one morning lecture.
@@ -215,14 +215,14 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [2:34 - 2:49] SCENE 6: Local Edge Sovereignty & Closing Punchline
+### [2:07 - 2:20] SCENE 6: Local Edge Sovereignty & Closing Punchline
 
 **On-Screen Action**:
 - Show terminal running offline with network disconnected to prove local TabPFN weight execution.
 - Display `pytest` passing all 14 tests in the terminal.
 - Return to GitHub repository page (`Labreo/KTCL-CommuteShield`) with closing title card and DEV challenge submission badge.
 
-**Voiceover Audio** (32 words, ~15 seconds):
+**Voiceover Audio** (32 words, ~13 seconds):
 > "Personal travel logs contain sensitive daily movements.
 > 
 > Running Tab-P-F-N locally protects Tejas's privacy, requires zero cloud subscriptions, and prevents stranded mornings.
@@ -234,6 +234,6 @@ Thank you for reviewing K-T-C-L CommuteShield.
 ## Audio Production & Video Assembly Checklist
 
 1. **Audio Generation**: In ElevenLabs, select an articulate narrator voice (e.g. *Adam*, *Brian*, or *George*) with stability at `65%` and clarity at `75%`.
-2. **Timing Confirmation**: The raw audio runs at `2:49`, leaving an `11-second` safety margin before the 3:00 cutoff.
+2. **Timing Confirmation**: The raw audio runs at `~2:20`, leaving a comfortable `~40-second` safety cushion before the 3:00 hard ceiling.
 3. **Screen Recording**: Record the terminal commands and Telegram screen captures at `1080p60` with font zoom set to 125% for mobile clarity.
 4. **Volume Levels**: Keep background music (ambient synth or low lo-fi) at `-22 dB` beneath the voiceover at `-1 dB`.
