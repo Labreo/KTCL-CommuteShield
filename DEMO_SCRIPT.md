@@ -2,10 +2,10 @@
 *Optimized for ElevenLabs Text-to-Speech (TTS) & Video Walkthrough Production*
 *Hacktoberfest Weekend Challenge: Build for a Friend*
 
-- **Target Completion**: **2:52** (172 seconds)
+- **Target Completion**: **2:49** (169 seconds)
 - **Hard Ceiling**: **3:00** (180 seconds)
 - **Recorded Pacing**: ~2.1 words per second (~126 words per minute)
-- **Total Word Budget**: **362 words**
+- **Total Word Budget**: **355 words**
 - **Pronunciation Guide**:
   - `KTCL` → `K-T-C-L`
   - `TabPFN` → `Tab-P-F-N`
@@ -37,6 +37,8 @@ An unplanned match exhausts his bus balance.
 Next morning at seven-thirty A-M, his card gets declined at the Margao turnstile, stranding him before morning exams.
 
 I built K-T-C-L CommuteShield to solve this dilemma for Tejas.
+
+To demonstrate live portal queries safely without exposing Tejas's credentials, we query my own card balance here on screen.
 
 CommuteShield runs locally on his laptop every evening at eight P-M I-S-T.
 
@@ -90,9 +92,10 @@ Thank you for reviewing K-T-C-L CommuteShield.
 ### [0:00 - 0:31] SCENE 1: The Commuter Dilemma (The Narrative Hook)
 
 **On-Screen Action**:
-- Open with a clean split view: a photo of the Goa KTCL Kadamba student smart card alongside an authentic WhatsApp chat showing the 7:30 AM turnstile decline message.
+- Open with a clean split view: a photo of the author's physical KTCL Kadamba smart card (used as the live demonstration instrument) alongside an authentic WhatsApp chat showing the 7:30 AM turnstile decline message.
 - Transition smoothly to the KTCL Cashless web portal showing the warning banner: *Depot server sync cutoff at 11:59 PM IST*.
 - Highlight Margao bus terminal and Farmagudi campus route on a stylized map.
+- *(Note: The physical card shown on screen belongs to author Kanak Waradkar, used safely as the live test instrument without exposing Tejas's credentials.)*
 
 **Voiceover Audio** (59 words, ~28 seconds):
 > "In Goa, thousands of college students rely on K-T-C-L smart cards for daily bus transit.
@@ -111,15 +114,18 @@ Thank you for reviewing K-T-C-L CommuteShield.
 - Pan to student calendar showing college lectures and Friday evening football matches at Wadi turf near Ponda.
 - Launch terminal window displaying the rich ASCII banner of KTCL CommuteShield.
 - Show the local project repository structure (`commuteshield/` modules, local `.env`, and `friend_commute_history.csv`).
+- On-screen caption: *Live portal checks query author Kanak Waradkar's card for safe demonstration; calendar models Tejas's transit routine.*
 
-**Voiceover Audio** (59 words, ~28 seconds):
+**Voiceover Audio** (74 words, ~35 seconds):
 > "My friend Tejas studies at Farmagudi campus and plays evening football matches at Wadi turf.
 > 
 > An unplanned match exhausts his bus balance.
 > 
 > Next morning at seven-thirty A-M, his card gets declined at the Margao turnstile, stranding him before morning exams.
 > 
-> I built K-T-C-L CommuteShield to solve this dilemma for Tejas."
+> I built K-T-C-L CommuteShield to solve this dilemma for Tejas.
+> 
+> To demonstrate live portal queries safely without exposing Tejas's credentials, we query my own card balance here on screen."
 
 ---
 
@@ -131,7 +137,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
   python cli.py run --balance 18.0 --turf 1
   ```
 - Terminal logs show:
-  1. KTCL balance fetched: ₹18.00.
+  1. Live KTCL balance fetched: ₹321.50 (demo card) / simulated test balance: ₹18.00.
   2. Scheduled trips: 3 (lectures + Wadi turf).
   3. Model loading: `tabpfn-v3.5-20260909.safetensors` active.
 - Red alert panel appears:
@@ -139,7 +145,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
   - `Projected Shortfall: ₹64.50`
   - `Recommended Top-Up: ₹100`
 
-**Voiceover Audio** (77 words, ~36 seconds):
+**Voiceover Audio** (62 words, ~29 seconds):
 > "CommuteShield runs locally on his laptop every evening at eight P-M I-S-T.
 > 
 > It queries the live K-T-C-L portal, checks his timetable, and pulls highway conditions through Serp-A-P-I.
@@ -209,14 +215,14 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [2:34 - 2:52] SCENE 6: Local Edge Sovereignty & Closing Punchline
+### [2:34 - 2:49] SCENE 6: Local Edge Sovereignty & Closing Punchline
 
 **On-Screen Action**:
 - Show terminal running offline with network disconnected to prove local TabPFN weight execution.
 - Display `pytest` passing all 14 tests in the terminal.
 - Return to GitHub repository page (`Labreo/KTCL-CommuteShield`) with closing title card and DEV challenge submission badge.
 
-**Voiceover Audio** (39 words, ~18 seconds):
+**Voiceover Audio** (32 words, ~15 seconds):
 > "Personal travel logs contain sensitive daily movements.
 > 
 > Running Tab-P-F-N locally protects Tejas's privacy, requires zero cloud subscriptions, and prevents stranded mornings.
@@ -228,6 +234,6 @@ Thank you for reviewing K-T-C-L CommuteShield.
 ## Audio Production & Video Assembly Checklist
 
 1. **Audio Generation**: In ElevenLabs, select an articulate narrator voice (e.g. *Adam*, *Brian*, or *George*) with stability at `65%` and clarity at `75%`.
-2. **Timing Confirmation**: The raw audio runs at `2:52`, leaving an `8-second` safety margin before the 3:00 cutoff.
+2. **Timing Confirmation**: The raw audio runs at `2:49`, leaving an `11-second` safety margin before the 3:00 cutoff.
 3. **Screen Recording**: Record the terminal commands and Telegram screen captures at `1080p60` with font zoom set to 125% for mobile clarity.
 4. **Volume Levels**: Keep background music (ambient synth or low lo-fi) at `-22 dB` beneath the voiceover at `-1 dB`.
