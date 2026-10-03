@@ -30,13 +30,13 @@ The central server closes batch processing at eleven fifty-nine P-M I-S-T.
 
 Recharges made after midnight fail to reach depot turnstiles until the following evening.
 
-My friend Kanak studies at Farmagudi campus and plays evening football matches at Wadi turf.
+My friend Tejas studies at Farmagudi campus and plays evening football matches at Wadi turf.
 
 An unplanned match exhausts his bus balance.
 
 Next morning at seven-thirty A-M, his card gets declined at the Margao turnstile, stranding him before morning exams.
 
-I built K-T-C-L CommuteShield to solve this dilemma for Kanak.
+I built K-T-C-L CommuteShield to solve this dilemma for Tejas.
 
 CommuteShield runs locally on his laptop every evening at eight P-M I-S-T.
 
@@ -50,7 +50,7 @@ It excels on small personal transit tables where standard models overfit.
 
 Let us test a live scenario.
 
-Kanak has eighteen rupees remaining on Friday evening, with a scheduled football match at Wadi turf tomorrow.
+Tejas has eighteen rupees remaining on Friday evening, with a scheduled football match at Wadi turf tomorrow.
 
 A simple rule might ignore this balance.
 
@@ -58,13 +58,13 @@ Tab-P-F-N evaluates his seven-factor transit history and calculates a stranded p
 
 The engine projects a sixty-four rupee shortfall.
 
-Instantly, CommuteShield delivers an emergency alert to Kanak's phone on Telegram.
+Instantly, CommuteShield delivers an emergency alert to Tejas's phone on Telegram.
 
 The alert explains the Wadi turf detour and prompts him to recharge one hundred rupees before the midnight cutoff.
 
 Next, watch how CommuteShield defeats notification fatigue on light days.
 
-On Tuesday, Kanak has twenty-five rupees and only one morning lecture.
+On Tuesday, Tejas has twenty-five rupees and only one morning lecture.
 
 A naive alert would spam his phone.
 
@@ -76,7 +76,7 @@ When monsoon flooding prompts diversions along N-H sixty-six, the agent applies 
 
 Personal travel logs contain sensitive daily movements.
 
-Running Tab-P-F-N locally protects Kanak's privacy, requires zero cloud subscriptions, and prevents stranded mornings.
+Running Tab-P-F-N locally protects Tejas's privacy, requires zero cloud subscriptions, and prevents stranded mornings.
 
 Thank you for reviewing K-T-C-L CommuteShield.
 ```
@@ -105,7 +105,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 
 ---
 
-### [0:31 - 1:00] SCENE 2: Kanak's Routine & Introducing KTCL CommuteShield
+### [0:31 - 1:00] SCENE 2: Tejas's Routine & Introducing KTCL CommuteShield
 
 **On-Screen Action**:
 - Pan to student calendar showing college lectures and Friday evening football matches at Wadi turf near Ponda.
@@ -113,13 +113,13 @@ Thank you for reviewing K-T-C-L CommuteShield.
 - Show the local project repository structure (`commuteshield/` modules, local `.env`, and `friend_commute_history.csv`).
 
 **Voiceover Audio** (59 words, ~28 seconds):
-> "My friend Kanak studies at Farmagudi campus and plays evening football matches at Wadi turf.
+> "My friend Tejas studies at Farmagudi campus and plays evening football matches at Wadi turf.
 > 
 > An unplanned match exhausts his bus balance.
 > 
 > Next morning at seven-thirty A-M, his card gets declined at the Margao turnstile, stranding him before morning exams.
 > 
-> I built K-T-C-L CommuteShield to solve this dilemma for Kanak."
+> I built K-T-C-L CommuteShield to solve this dilemma for Tejas."
 
 ---
 
@@ -169,7 +169,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 **Voiceover Audio** (69 words, ~30 seconds):
 > "Let us test a live scenario.
 > 
-> Kanak has eighteen rupees remaining on Friday evening, with a scheduled football match at Wadi turf tomorrow.
+> Tejas has eighteen rupees remaining on Friday evening, with a scheduled football match at Wadi turf tomorrow.
 > 
 > A simple rule might ignore this balance.
 > 
@@ -177,7 +177,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 > 
 > The engine projects a sixty-four rupee shortfall.
 > 
-> Instantly, CommuteShield delivers an emergency alert to Kanak's phone on Telegram.
+> Instantly, CommuteShield delivers an emergency alert to Tejas's phone on Telegram.
 > 
 > The alert explains the Wadi turf detour and prompts him to recharge one hundred rupees before the midnight cutoff."
 
@@ -197,7 +197,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 **Voiceover Audio** (59 words, ~27 seconds):
 > "Next, watch how CommuteShield defeats notification fatigue on light days.
 > 
-> On Tuesday, Kanak has twenty-five rupees and only one morning lecture.
+> On Tuesday, Tejas has twenty-five rupees and only one morning lecture.
 > 
 > A naive alert would spam his phone.
 > 
@@ -219,7 +219,7 @@ Thank you for reviewing K-T-C-L CommuteShield.
 **Voiceover Audio** (39 words, ~18 seconds):
 > "Personal travel logs contain sensitive daily movements.
 > 
-> Running Tab-P-F-N locally protects Kanak's privacy, requires zero cloud subscriptions, and prevents stranded mornings.
+> Running Tab-P-F-N locally protects Tejas's privacy, requires zero cloud subscriptions, and prevents stranded mornings.
 > 
 > Thank you for reviewing K-T-C-L CommuteShield."
 
