@@ -96,6 +96,11 @@ class CommuteShieldAgent:
         if prediction.is_high_risk:
             dispatched_telegram = self.notifier.send_telegram(alert_msg)
             dispatched_twilio = self.notifier.send_twilio_whatsapp(alert_msg)
+            self.notifier.send_desktop_notification(
+                title="KTCL CommuteShield",
+                subtitle=f"🚨 Emergency Alert for {Config.COMMUTER_NAME} ({prediction.risk_level})",
+                message=f"Balance: ₹{balance:.2f} | Risk: {prediction.p_stranded*100:.1f}% | Top-Up: ₹{prediction.recommended_topup:.0f}",
+            )
 
         # Visual console display
         self.notifier.dispatch_console(
@@ -109,6 +114,16 @@ class CommuteShieldAgent:
             model_name=prediction.model_name,
             is_live_sync=card_status.is_live_sync,
         )
+
+        # Explicit delivery feedback
+        from rich.console import Console
+        _c = Console()
+        if dispatched_telegram:
+            _c.print("[bold green]✓ Live Telegram Alert Dispatched -> @ktcl_commuteshield_bot[/bold green]")
+        elif prediction.is_high_risk:
+            _c.print("[yellow]⚠️ High risk detected, but Telegram bot credentials are not configured.[/yellow]")
+        else:
+            _c.print(f"[dim green]✓ Anti-Fatigue Filter Active: Zero Telegram alert spam (Risk {prediction.p_stranded*100:.1f}% < 60% threshold)[/dim green]")
 
         # Telemetry logging (privacy-preserving, card masked)
         telemetry_record = {

@@ -56,17 +56,29 @@ secrets/
 *waradkar*
 *ST25*
 
-# Video production assets & screenshots (sensitive card details)
-assets/
+# Hackathon submission drafts and demo scripts (Per User Request)
+submission.md
+SUBMISSION.md
+demoscript.md
+DEMO_SCRIPT.md
+demo_script.md
+
+# Video production media binaries & subtitles
+*.mp4
+*.mov
+*.mp3
+*.wav
+*.srt
+*.vtt
 
 # IDE & OS
 .DS_Store
+*/.DS_Store
 .vscode/
 .idea/
 *.swp
 *~
 Untitled*
-
 
 # Logs & temporary files
 *.log

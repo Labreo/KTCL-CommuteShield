@@ -10,6 +10,8 @@ delivery across:
 
 import json
 import logging
+import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -163,6 +165,20 @@ class CommuteShieldNotifier:
         except Exception as e:
             logger.warning("Failed to dispatch Twilio WhatsApp message: %s", str(e))
             return False
+
+    def send_desktop_notification(self, title: str, subtitle: str, message: str) -> bool:
+        """Trigger an instant macOS native notification banner on desktop."""
+        if sys.platform == "darwin":
+            try:
+                clean_msg = message.replace('"', '\\"').replace("'", "’")
+                clean_title = title.replace('"', '\\"')
+                clean_sub = subtitle.replace('"', '\\"')
+                script = f'display notification "{clean_msg}" with title "{clean_title}" subtitle "{clean_sub}" sound name "Glass"'
+                subprocess.run(["osascript", "-e", script], capture_output=True, timeout=3.0)
+                return True
+            except Exception as e:
+                logger.warning("Desktop notification failed: %s", str(e))
+        return False
 
     def log_telemetry(self, alert_data: dict):
         """Append alert telemetry to local log for privacy-preserving auditing."""

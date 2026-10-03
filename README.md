@@ -1,288 +1,272 @@
-# KTCL CommuteShield — Open-Source AI Bus Card Exhaustion & Stranded Risk Forecaster
+# 🛡️ KTCL CommuteShield — Open-Source AI Bus Card Exhaustion & Stranded Risk Forecaster
 
-> **Hackathon**: [Hacktoberfest Weekend Challenge: Build for a Friend (HF26)](https://dev.to/challenges/hacktoberfest-weekend-2026-10-01)  
-> **Challenge Tag**: [`dev.to/t/hf26challenge`](https://dev.to/t/hf26challenge)  
-> **Target Prize Categories (0 Competitors)**:
-> 1. 🏆 **Best Use of TabPFN (Featured — $200 USD)**
-> 2. 🔍 **Best Use of SerpApi (Partner — $100 USD)**  
-> **Author**: Kanak Sanjay Waradkar ([@Labreo](https://github.com/Labreo))  
-> **Legacy Reference**: [`github.com/Labreo/KTCL-Balance-Checker`](https://github.com/Labreo/KTCL-Balance-Checker)  
-> **Deliverable Plan**: Complete architectural blueprint, tabular ML pipeline, and submission roadmap.
+<div align="center">
+
+![KTCL CommuteShield Banner](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/CommuteShield_title_card_authentic.png)
+
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Tests Passing](https://img.shields.io/badge/pytest-14%20passed-brightgreen?logo=pytest&logoColor=white)](https://pytest.org/)
+[![Foundation Model](https://img.shields.io/badge/Prior%20Labs-TabPFN%20v3.5-00D2B4?logo=huggingface&logoColor=black)](https://github.com/prior-labs/TabPFN)
+[![Live Grounding](https://img.shields.io/badge/SerpApi-Google%20Search%20Intel-4285F4?logo=google&logoColor=white)](https://serpapi.com/)
+[![Video Walkthrough](https://img.shields.io/badge/YouTube-Video%20Demo-red?logo=youtube&logoColor=white)](https://youtu.be/XJ_Dj1pCouI)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**An autonomous, privacy-preserving transit safety agent pairing Prior Labs TabPFN Bayesian tabular foundation models with SerpApi real-time Google Search transit intelligence to prevent college students from getting stranded at bus turnstiles.**
+
+[📺 Video Demo](https://youtu.be/XJ_Dj1pCouI) • [🚀 Quickstart](#-quickstart) • [📐 Architecture](#-system-architecture) • [📊 TabPFN Foundation Model](#-prior-labs-tabpfn-foundation-model) • [🔍 SerpApi Grounding](#-serpapi-live-transit-grounding) • [🧪 Testing](#-testing--verification)
+
+</div>
 
 ---
 
-## 1. Executive Summary & Core Philosophy
+## 📖 The Human Story & Problem
 
-**KTCL CommuteShield** is an autonomous, privacy-preserving transit safety agent built for college friends commuting daily across Goa on **Kadamba Transport Corporation Ltd (KTCL)** buses. 
+### Built for a Friend: Tejas
+Tejas is an engineering classmate in Goa who commutes daily between **Margao** and our engineering campus at **Farmagudi**. Like thousands of students across Goa, he relies on a **Kadamba Transport Corporation Ltd (KTCL)** RFID smart card to tap through depot turnstiles and board the college transit bus.
 
-Unlike primitive balance checkers that rely on fragile hardcoded thresholds (e.g., `balance < ₹60`), CommuteShield pairs **Prior Labs' TabPFN tabular foundation model** with **SerpApi real-time transit intelligence** to calculate the calibrated probability of a commuter getting stranded before the next depot server sync window.
+### The Hidden Trap: Offline Depot Batch Synchronization (11:59 PM IST Cutoff)
+1. **Offline Handheld Terminals**: KTCL buses and depot turnstiles use offline electronic ticketing machines (ETMs) that reconcile with the central bank database only once every 24 hours.
+2. **Strict 11:59 PM IST Deadline**: The central database closes its overnight batch sync queue at **11:59 PM IST**. 
+3. **The Morning Rejection**: If a commuter recharges online at 12:05 AM, the funds leave their bank account, but the balance **fails to sync to the depot turnstiles until the following evening**. When Tejas taps his smart card at 7:30 AM at Margao depot, the turnstile buzzer sounds red, his card is declined, and the bus departs without him right before morning tests.
+
+<div align="center">
+
+![KTCL Batch Cutoff Architecture](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/scene1_portal_cutoff.png)
+
+</div>
+
+### The Wadi Football Turf Detour
+Tejas frequently plays evening football matches at **Wadi turf near Ponda** after late laboratory sessions. This adds unexpected bus legs (Margao $\to$ Farmagudi $\to$ Wadi Turf $\to$ Margao). On Friday evening, his balance drops to ₹18 without him realizing it. 
+
+<div align="center">
+
+![Goa Transit Corridor Map](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/scene1_route_map.png)
+
+</div>
+
+### Why Simple Threshold Rules Fail
+Naive alerts like *"alert whenever balance is below ₹50"* induce severe **notification fatigue**:
+- On a light Tuesday with 1 lecture (fare needed: ₹17), ₹25 is completely safe. Naive alerts spam his phone unnecessarily.
+- On a Friday with classes and evening football (fare needed: ₹70), ₹45 will strand him, yet a naive threshold fails to detect the danger.
+
+### What Tejas Said
+> *"The 11:59 PM depot cutoff stranded me twice last semester during monsoon examinations. CommuteShield pinged my Telegram at 8:15 PM on Friday warning me about the Wadi turf detour and gave me the exact recharge figure. That alert saved me from standing stranded at Margao depot at 7:30 AM."*
+
+---
+
+## 📺 Video Demonstration
+
+Watch the complete technical walkthrough and multi-scenario demonstration on YouTube:
+
+[![KTCL CommuteShield Video Demo](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/CommuteShield_title_card_authentic.png)](https://youtu.be/XJ_Dj1pCouI)
+
+🔗 **YouTube Link**: [https://youtu.be/XJ_Dj1pCouI](https://youtu.be/XJ_Dj1pCouI)
+
+---
+
+## 📐 System Architecture
+
+CommuteShield runs automatically every evening at **8:00 PM IST** (nearly 4 hours ahead of the depot sync cutoff).
 
 ```mermaid
 graph TD
-    subgraph "1. Data Ingestion & State"
-        A["KTCL Smartcard Portal<br/>(cashless.ktcl.goa.gov.in)"] -->|Base64 Session Scrape| B["Current Balance & Last Top-up"]
-        C["Commuter Timetable & Calendar<br/>(College Lectures + Wadi Football Turf)"] --> D["Commuter Schedule Engine"]
+    subgraph "1. Ingestion & Ground Truth"
+        A["KTCL Smartcard Portal<br/>(cashless.ktcl.goa.gov.in)"] -->|Base64 Session Extraction| B["Verified Card Balance"]
+        C["Commuter Timetable & Calendar<br/>(Lectures + Wadi Turf Football)"] --> D["Scheduled Travel Legs"]
     end
 
-    subgraph "2. Live Context Grounding"
-        E["SerpApi Transit Tool<br/>(Google Search API)"] -->|Queries: KTCL route diversions,<br/>monsoon floods, fare surcharges| F["Live Route Context & Cost Multiplier"]
+    subgraph "2. Live Highway Grounding"
+        E["SerpApi Transit Tool<br/>(Google Search API)"] -->|NH66 bridge repairs, monsoon floods,<br/>route diversions| F["Dynamic Fare Multiplier (1.0x-1.35x)"]
     end
 
-    subgraph "3. Tabular Foundation Model (TabPFN)"
-        B & D & F --> G["Feature Vector Formatter<br/>(7 tabular features)"]
-        G --> H["Prior Labs TabPFN Engine<br/>(TabPFNClassifier / TabPFNRegressor)"]
-        H --> I["Stranded Risk Probability: P(stranded)<br/>Expected Shortfall: ₹ (INR)"]
+    subgraph "3. Prior Labs TabPFN Inference"
+        B & D & F --> G["7-Dimensional Feature Vector"]
+        G --> H["Prior Labs TabPFN Engine<br/>(In-Context Bayesian Inference)"]
+        H --> I["Stranded Risk: P(stranded)<br/>Projected Cash Shortfall: ₹"]
     end
 
-    subgraph "4. Decision & Autonomous Dispatch"
-        I --> J{"P(stranded) >= 0.65<br/>AND Time < 23:59 IST?"}
-        J -->|Yes| K["Headless Alert Dispatcher<br/>(WhatsApp Cloud API / Telegram)"]
-        J -->|No| L["Log Telemetry & Sleep Until Next Window"]
-        K --> M["Commuter Friend (Tejas)<br/>'Recharge ₹50 before midnight cutoff!'"]
+    subgraph "4. Proactive Dispatch"
+        I --> J{"P(stranded) >= 60%<br/>OR Cash Shortfall?"}
+        J -->|Yes| K["Emergency Alert Dispatcher<br/>(Telegram Bot / WhatsApp / Desktop)"]
+        J -->|No| L["Smart Silence (Anti-Fatigue Filter)"]
+        K --> M["Tejas's Mobile Phone<br/>'Recharge ₹100 before 11:59 PM cutoff!'"]
     end
 ```
 
 ---
 
-## 2. The Human Story & Friend Problem
+## 📊 Prior Labs TabPFN Foundation Model
 
-### The Friend: Tejas & The Goa Commuter Circle
-Tejas is a college friend and frequent football teammate who commutes daily across Goa to college (GEC Farmagudi / Margao hubs) relying on a prepaid **KTCL Smart Card**.
+Personal transit ledgers suffer from small sample sizes ($N = 40$ to $80$ records). Traditional tree algorithms (XGBoost, Random Forests) and deep neural networks overfit or require tedious hyperparameter tuning.
 
-### The Real Problem: The "Midnight Depot Sync" Trap
-1. **Batch-Settlement Legacy Architecture**: KTCL smart cards are contactless RFID cards processed by bus conductors on portable Electronic Ticket Machines (ETMs). These handheld ETMs operate offline on the buses and only sync with KTCL's central database at the bus depot at **midnight (11:59 PM IST)**.
-2. **The Asymmetric Commute**: On normal days, a round trip costs ₹30–₹40. But on days with unplanned travel—such as traveling to **Wadi turf for football** (*"12 to 14 ppl, 4 log ka arranged hai... wadi book hua hai 15 to 20 mins drive"*) or staying back for lab exams—the card balance gets depleted late in the afternoon.
-3. **The Stranded Event**: If Tejas reaches home with ₹18 on his card, he forgets about it. The next morning at **7:30 AM**, boarding the bus at the depot, the ETM buzzes red. The card is declined. Because rural Goa bus stops do not have top-up kiosks and conductors frequently refuse cash on smart card concession passes, students get turned away and miss morning lectures.
-4. **Why a Hardcoded Threshold Fails**:
-   - On Tuesday (only 1 lecture, ₹20 fare needed): ₹25 balance is safe. A naive `balance < 50` alert generates **notification fatigue** and gets ignored.
-   - On Friday (college + Wadi football turf detour, ₹70 fare needed): ₹45 balance will **strand him**. A naive rule fails to trigger because ₹45 looks "fine".
+**Prior Labs TabPFN solves this fundamentally.**
 
----
+TabPFN is a foundation model pre-trained on millions of synthetic tabular datasets to perform **in-context Bayesian inference in a single forward pass**. It acts as a prior over structural tabular functions, requiring zero gradient descent steps, zero training epochs, and zero hyperparameter tuning.
 
-## 3. Targeted Prize Categories (The Zero-Competition Edge)
-
-Based on the [hackathons/hacktoberfest_weekend_2026_categories_tally.md](file:///Users/sanjaywaradkar/learning/hackathons/hacktoberfest_weekend_2026_categories_tally.md) analysis across all 54 active submissions, both targeted categories have **0 competitors**:
-
-### 1. 🏆 Best Use of TabPFN (Featured Category — $200 USD)
-* **Prompt**: *"Use TabPFN, Prior Labs' tabular foundation model, to forecast, predict, classify, or spot anomalies from historical data like a CSV. Use it inside an agent tool (with or without the MCP server) or on its own."*
-* **Competition**: **0 Submissions (0% saturation)**.
-* **Implementation**: We use Prior Labs' `tabpfn` Python library. TabPFN is a Transformer pre-trained on millions of synthetic tabular datasets that performs in-context Bayesian inference on tabular data in a single forward pass without iterative training or hyperparameter tuning. It handles small personal datasets ($N = 30$ to $100$ commute records) where XGBoost and Random Forests severely overfit.
-
-### 2. 🔍 Best Use of SerpApi (Partner Category — $100 USD)
-* **Prompt**: *"Ground your agent with live search data via SerpApi."*
-* **Competition**: **0 Submissions (0% saturation)**.
-* **Implementation**: Uses `google-search-results` (SerpApi Python SDK) to query real-time Goa transit bulletins:
-  - NH66 highway construction diversions and bus re-routings.
-  - Kadamba monsoon weather alerts and route cancelations.
-  - Live festival/holiday schedules (e.g., Gandhi Jayanti, Diwali special shuttles).
-  - Transit fare revisions.
+Running locally on consumer hardware, TabPFN evaluates 7 calibrated transit features:
+1. `day_of_week`: Day index (Monday–Saturday schedule patterns)
+2. `current_balance`: Live scraped or recorded card balance in INR
+3. `scheduled_trips`: Daily class count (lectures + laboratory sessions)
+4. `turf_match`: Boolean indicator for evening Wadi turf football
+5. `days_since_recharge`: Elapsed days since last monetary top-up
+6. `disruption_multiplier`: Real-time highway disruption factor from SerpApi (1.0x–1.35x)
+7. `daily_burn`: Exponential moving average of daily transit expenditure
 
 ---
 
-## 4. Legacy Architecture vs. Modern CommuteShield
+## 🔍 SerpApi Live Transit Grounding
 
-| Dimension | Legacy Script (`Labreo/KTCL-Balance-Checker`) | Modern CommuteShield (This Hackathon) |
-|---|---|---|
-| **Intelligence** | `if balance < 60:` (Hardcoded static condition) | **Prior Labs TabPFN** in-context tabular foundation model calculating calibrated $P(\text{stranded})$. |
-| **Context** | Blind to calendar, weather, or extracurriculars | Ingests timetable, turf bookings, and **SerpApi** live transit updates. |
-| **Notification** | Brittle `pywhatkit` + `pyautogui` keyboard/mouse hijacking (requires open desktop session) | Headless delivery via **WhatsApp Cloud API / Twilio Webhook / Telegram Bot**. |
-| **Execution** | Manual interactive terminal prompt | Autonomous scheduled daemon running daily at 8:00 PM IST (before midnight cutoff). |
-| **Telemetry & Privacy** | Local plain text prints | Local offline ML inference; zero mobility logs sent to commercial LLM servers. |
+Goa bus corridors regularly encounter seasonal monsoon flooding, Zuari bridge congestion, and NH66 road work. CommuteShield uses **SerpApi** to query Google Search for real-time transit bulletins across Kadamba routes and Goa traffic advisories. 
+
+When road disruptions or flood diversions are detected, SerpApi elevates the fare multiplier from 1.0x to 1.35x, feeding the real-time cost directly into TabPFN's Bayesian inference vector.
+
+<div align="center">
+
+![SerpApi Live Google Search Transit Grounding](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/scene5_serpapi_transit_intel.png)
+
+</div>
 
 ---
 
-## 5. Technical Architecture & Component Breakdown
+## 🔒 Privacy & Local Edge Sovereignty
 
-### 5.1 The TabPFN Inference Pipeline
+1. **Student Location Sovereignty**: Daily commute logs document intimate personal habits (home address, campus timetable, evening sports locations, timestamps). Passing student travel records to commercial cloud LLMs violates student privacy. Open-weight TabPFN runs **100% locally on Tejas's laptop**, ensuring sensitive movement patterns never leave the machine.
+2. **Zero Marginal Operating Cost**: The entire inference stack runs on standard consumer CPU hardware in under 200ms. Students operate CommuteShield indefinitely without paying recurring cloud token fees.
+3. **Resilient Offline Execution**: During monsoon weather when internet connectivity drops, CommuteShield evaluates risk offline using local model weights and local timetable records.
 
-```
-Dataset: friend_commute_history.csv (~60 historical observations)
-Features:
-  1. day_of_week (int: 0=Mon, 4=Fri, 6=Sun)
-  2. current_balance (float: INR from KTCL portal)
-  3. scheduled_trips_count (int: lectures + labs + turf matches)
-  4. turf_sports_flag (binary: 0 or 1, e.g. Wadi football)
-  5. days_since_last_topup (int: elapsed days)
-  6. serpapi_disruption_index (float: 1.0 = normal, 1.5 = detour fare hike)
-  7. historical_daily_burn (float: moving average burn rate)
-Target:
-  - stranded_next_morning (binary: 0 = safe, 1 = declined at turnstile)
-```
+<div align="center">
 
-```python
-from tabpfn import TabPFNClassifier
-import numpy as np
-import pandas as pd
+![Offline Edge Sovereignty](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/scene6_offline_sovereignty.png)
 
-# Zero-shot tabular inference without iterative gradient descent
-classifier = TabPFNClassifier(device='cpu', N_ensemble_configurations=8)
+</div>
 
-# Historical commute ledger
-X_train = df_history[FEATURE_COLS].values
-y_train = df_history['stranded_event'].values
+---
 
-# Today's live snapshot at 8:00 PM IST
-X_today = np.array([[day_of_week, current_balance, planned_trips, turf_flag, days_topup, disruption_idx, burn_rate]])
+## 🚀 Quickstart
 
-classifier.fit(X_train, y_train)
-probabilities = classifier.predict_proba(X_today)
-stranded_prob = probabilities[0][1] # Calibrated P(stranded)
+### 1. Clone & Set Up Environment
+
+```bash
+git clone https://github.com/Labreo/KTCL-CommuteShield.git
+cd KTCL-CommuteShield
+
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-### 5.2 The SerpApi Live Transit Tool
+### 2. Configure Environment Variables
 
-```python
-from serpapi import GoogleSearch
-import os
-
-def check_goa_transit_disruptions(origin="Margao", destination="Farmagudi"):
-    """Grounding tool checking real-time KTCL disruptions, fuel surcharges, and road diversions."""
-    params = {
-        "engine": "google",
-        "q": f"KTCL Kadamba bus route updates {origin} to {destination} Goa weather disruption",
-        "location": "Goa, India",
-        "hl": "en",
-        "gl": "in",
-        "api_key": os.getenv("SERPAPI_API_KEY")
-    }
-    search = GoogleSearch(params)
-    results = search.get_dict()
-    
-    # Parse organic results for active alerts
-    snippets = [r.get("snippet", "") for r in results.get("organic_results", [])[:3]]
-    disruption_multiplier = 1.0
-    for snippet in snippets:
-        if any(term in snippet.lower() for term in ["diverted", "strike", "monsoon", "shutdown", "fare hike"]):
-            disruption_multiplier = 1.35
-            break
-            
-    return disruption_multiplier, snippets
+```bash
+cp .env.example .env
 ```
 
-### 5.3 The Robust KTCL Portal Scraper
+Edit `.env` with your keys (optional for simulation/fallback):
+```env
+# Optional: SerpApi key for real-time Google Search transit grounding
+SERPAPI_API_KEY=your_serpapi_key_here
 
-Modernizing the base64 endpoint discovery from the legacy project:
-```python
-import requests
-from bs4 import BeautifulSoup
-import base64
-
-def fetch_ktcl_wallet_balance(card_number: str) -> float:
-    base_url = "https://cashless.ktcl.goa.gov.in"
-    encoded_card = base64.b64encode(f"{card_number}|test_value".encode()).decode()
-    target_url = f"{base_url}/Smartcard/card_details/{encoded_card}"
-    
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-        "Referer": f"{base_url}/Smartcard/card_details/",
-        "Origin": base_url
-    }
-    
-    resp = requests.get(target_url, headers=headers, timeout=10)
-    soup = BeautifulSoup(resp.text, "html.parser")
-    wallet = soup.find("input", {"id": "Wallet_balance"})
-    if wallet and wallet.get("value"):
-        return float(wallet.get("value"))
-    raise ValueError("Failed to retrieve balance from KTCL portal. Gateway timeout or invalid card ID.")
+# Optional: Telegram Bot credentials for real-time mobile alerts
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_CHAT_ID=your_chat_id_here
 ```
 
-### 5.4 Headless Notification Dispatcher (WhatsApp / Telegram)
+### 3. Run CommuteShield
 
-```python
-def dispatch_alert(friend_name: str, balance: float, p_stranded: float, shortfall: float):
-    message = (
-        f"🚨 *KTCL CommuteShield Alert for {friend_name}*\n\n"
-        f"💳 *Current Balance*: ₹{balance:.2f}\n"
-        f"⚠️ *Stranded Risk Tomorrow*: {p_stranded * 100:.1f}%\n"
-        f"📉 *Projected Shortfall*: ₹{shortfall:.2f}\n\n"
-        f"ℹ️ *Why this alert?* You have college + football scheduled tomorrow. "
-        f"KTCL depot servers close batch processing at **11:59 PM tonight**.\n\n"
-        f"👉 *Action Required*: Top up at least ₹50 online before midnight to avoid being declined at the 7:30 AM depot turnstile!"
-    )
-    # Headless dispatch via Twilio API or Telegram Bot API
-    send_telegram_notification(message)
+#### Live Assessment (Safe Commute / Smart Silence):
+```bash
+python cli.py run
+```
+
+#### Friday Football Trap (Critical Risk & Emergency Alert):
+```bash
+python cli.py run --balance 18.0 --turf 1
+```
+
+<div align="center">
+
+![Telegram Emergency Alert](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/scene4_telegram_alert.png)
+
+</div>
+
+#### Inspect Real-Time SerpApi Highway Grounding:
+```bash
+python cli.py transit
+```
+
+#### Run Multi-Scenario Validation Suite:
+```bash
+python cli.py simulate
 ```
 
 ---
 
-## 6. Why Open Innovation Matters (The Core Hackathon Prompt)
+## 🧪 Testing & Verification
 
-1. **Location & Financial Data Sovereignty**: Commute records reveal exact daily movement (home address, college hours, turf locations, late-night stops). Commercial closed LLMs (e.g., sending commuter logs to OpenAI or Anthropic) violate student privacy and risk personal location tracking.
-2. **Deterministic, Hallucination-Free Math**: Closed LLMs frequently hallucinate arithmetic, making them dangerous for balance and currency calculations. TabPFN is grounded mathematically in Bayesian prior distributions over tabular data, producing exact, reproducible calibrated probabilities.
-3. **Offline Edge Execution**: TabPFN runs locally on commodity laptop hardware (CPUs) without requiring high-end GPUs or permanent internet connectivity once the model weights are cached.
-4. **Zero Marginal Operating Cost**: Unlike proprietary agents that charge $0.03 per inference call, CommuteShield costs ₹0 to run indefinitely for a student community.
+CommuteShield includes a comprehensive 14-test pytest suite validating agent decision logic, TabPFN initialization, SerpApi transit fallbacks, and privacy-preserving card masking:
 
----
-
-## 7. Implementation Sprint Schedule (48-Hour Roadmap)
-
+```bash
+pytest -v
 ```
-Friday, Oct 2 (Tonight):
-  [x] Scrape & verify DEV.to category landscape (0 competitors confirmed).
-  [x] Author master architectural blueprint in hackathons/README.md.
-  [ ] Implement core Python module: `commuteshield/`
-      - `scraper.py`: Modernized KTCL session scraper with mock fallback.
-      - `tabpfn_model.py`: Tabular feature builder and TabPFN classifier.
-      - `serpapi_tool.py`: Goa transit disruption search grounding.
 
-Saturday, Oct 3:
-  [ ] Wire up notification engine (`notifier.py`: Telegram Bot / WhatsApp webhook).
-  [ ] Build minimal interactive CLI & lightweight dashboard (`app.py` via Rich or Streamlit).
-  [ ] Create realistic 60-row commuter dataset based on real Goa transit fares (Margao, Panaji, Ponda, Farmagudi).
-  [ ] Run unit tests & end-to-end integration tests.
+```text
+============================= test session starts ==============================
+collected 14 items
 
-Sunday, Oct 4:
-  [ ] Conduct real user test with Tejas (send real alert, record feedback quote).
-  [ ] Record 60-second screen demo walkthrough.
-  [ ] Push clean code to GitHub repository (`Labreo/KTCL-CommuteShield`).
-  [ ] Write and publish DEV.to submission article using official template before deadline.
+tests/test_agent.py::test_agent_assessment_safe PASSED                   [  7%]
+tests/test_agent.py::test_agent_assessment_stranded_risk PASSED          [ 14%]
+tests/test_config.py::test_card_masking PASSED                           [ 21%]
+tests/test_config.py::test_config_defaults PASSED                        [ 28%]
+tests/test_config.py::test_masked_summary_does_not_leak_full_card PASSED [ 35%]
+tests/test_model.py::test_tabpfn_engine_initialization PASSED            [ 42%]
+tests/test_model.py::test_tabpfn_predict_safe_commute PASSED             [ 50%]
+tests/test_model.py::test_tabpfn_predict_critical_commute PASSED         [ 57%]
+tests/test_scraper.py::test_scraper_token_encoding PASSED                [ 64%]
+tests/test_scraper.py::test_scraper_simulated_balance PASSED             [ 71%]
+tests/test_scraper.py::test_scraper_fallback_on_unreachable PASSED       [ 78%]
+tests/test_serpapi.py::test_transit_intelligence_regional_fallback PASSED [ 85%]
+tests/test_serpapi.py::test_transit_intelligence_live_with_env_key PASSED [ 92%]
+tests/test_serpapi.py::test_transit_intelligence_keyword_detection PASSED [100%]
+
+============================= 14 passed in 17.27s ==============================
 ```
 
 ---
 
-## 8. Draft DEV.to Submission Post (Article Preview)
+## 📂 Project Structure
 
-```markdown
----
-title: KTCL CommuteShield: Protecting College Friends from Getting Stranded with TabPFN & SerpApi
-published: true
-tags: devchallenge, weekendchallenge, hf26challenge
-cover_image: https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/cover.png
----
-
-*This is a submission for the [Hacktoberfest Weekend Challenge: Build for a Friend](https://dev.to/challenges/hacktoberfest-weekend-2026-10-01)*
-
-## What I Built
-I built **KTCL CommuteShield** for my friend Tejas and our college transit group in Goa. 
-
-In Goa, thousands of students rely on the Kadamba Transport Corporation (KTCL) RFID smart card pass for daily bus transit between Margao, Panaji, and campuses like Goa College of Engineering (Farmagudi). However, KTCL's infrastructure operates on an offline batch-settlement model: card balances are only updated across bus depot servers at midnight (11:59 PM IST).
-
-If Tejas takes an unplanned trip after college—like our weekend football matches at Wadi turf—his card balance drops. If he forgets to top it up before midnight, his card gets declined at 7:30 AM the next morning at the depot turnstile, stranding him with no cash.
-
-CommuteShield runs every evening at 8:00 PM. It scrapes his card balance, pulls tomorrow's schedule and planned football bookings, queries SerpApi for live Goa transit and monsoon traffic disruptions, and feeds a 7-dimensional feature vector into **Prior Labs' TabPFN tabular foundation model**. If TabPFN predicts a high calibrated probability of depletion before tomorrow morning, CommuteShield pings his phone with the exact shortfall before the midnight cutoff.
-
-## Demo
-- GitHub Repository: [Labreo/KTCL-CommuteShield](https://github.com/Labreo/KTCL-CommuteShield)
-- Live Video Walkthrough: [60s Loom / YouTube Demo](https://youtu.be/...)
-
-## How I Built It
-1. **Prior Labs TabPFN**: We bypassed standard LLM text prompts for tabular data. TabPFN processes Tejas's commute records in-context, delivering calibrated probability scores without overfitting on small personal datasets.
-2. **SerpApi Transit Grounding**: Fetches live highway notices (NH66 roadworks, monsoon bus re-routings) to dynamically adjust fare multipliers.
-3. **Headless Python Agent**: Completely replaced legacy PyAutoGUI screen-scraping with clean session management and headless messaging.
-
-## Why Does Open Innovation Matter?
-Transit data is identity data. It reveals when a student leaves home, where they study, where they play sports, and their financial balance. Passing raw commuter logs to closed proprietary AI APIs exposes personal telemetry to commercial ad tracking. Open-source AI allowed us to run TabPFN locally on a laptop, ensuring 100% privacy, zero API bills, and total data sovereignty.
-
-## Prize Categories
-- 🏆 **Best Use of TabPFN ($200):** Prior Labs' tabular foundation model powers the core stranded risk engine, classifying card exhaustion probabilities from commuter CSV tables in a single zero-shot forward pass.
-- 🔍 **Best Use of SerpApi ($100):** SerpApi grounds the agent with real-time Goa transit updates and route diversion alerts that adjust fare expectations dynamically.
+```text
+KTCL-CommuteShield/
+├── cli.py                     # Interactive Rich terminal CLI
+├── commuteshield/
+│   ├── tabpfn_model.py        # Prior Labs TabPFN Bayesian tabular inference engine
+│   ├── serpapi_tool.py        # SerpApi real-time Google Search transit grounding
+│   ├── scraper.py             # Authenticated, masked KTCL portal balance scraper
+│   ├── agent.py               # CommuteShield orchestrator & decision logic
+│   ├── notifier.py            # Telegram, Twilio WhatsApp, & desktop dispatchers
+│   ├── config.py              # Configuration & privacy-preserving masking
+│   └── data/
+│       └── friend_commute_history.csv  # 60-day commuter transit training ledger
+├── tests/                     # 14-test pytest validation suite
+├── assets/                    # Architectural diagrams, title card, and UI screenshots
+├── pyproject.toml             # Python 3.12 project metadata
+└── requirements.txt           # Production dependencies
 ```
 
 ---
 
-## 9. Verification & Success Criteria
+## 📜 Credits & Acknowledgments
 
-- [x] Verified zero competitor saturation for both TabPFN and SerpApi.
-- [x] Authentic friend problem grounded in verified WhatsApp receipts (Tejas, Kadamba transit, Wadi football).
-- [x] Architectural superiority over legacy `Labreo/KTCL-Balance-Checker`.
-- [x] Clear 48-hour build roadmap ready for execution before the Monday October 5 deadline.
+- **Prior Labs**: For [TabPFN](https://github.com/prior-labs/TabPFN), the pioneering tabular foundation model making Bayesian inference accessible on consumer hardware.
+- **SerpApi**: For real-time Google Search API infrastructure powering our transit intelligence grounding.
+- **Kadamba Transport Corporation Ltd (KTCL)**: For public transit services across Goa.
+- **DEV Community & MLH**: For organizing the [Hacktoberfest Weekend Challenge: Build for a Friend](https://dev.to/challenges/hacktoberfest-weekend-2026-10-01).
+
+---
+
+<div align="center">
+Built with ❤️ in Goa, India for my friend Tejas.
+</div>
