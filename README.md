@@ -8,12 +8,12 @@
 [![Tests Passing](https://img.shields.io/badge/pytest-14%20passed-brightgreen?logo=pytest&logoColor=white)](https://pytest.org/)
 [![Foundation Model](https://img.shields.io/badge/Prior%20Labs-TabPFN%20v3.5-00D2B4?logo=huggingface&logoColor=black)](https://github.com/prior-labs/TabPFN)
 [![Live Grounding](https://img.shields.io/badge/SerpApi-Google%20Search%20Intel-4285F4?logo=google&logoColor=white)](https://serpapi.com/)
-[![Video Walkthrough](https://img.shields.io/badge/YouTube-Video%20Demo-red?logo=youtube&logoColor=white)](https://youtu.be/XJ_Dj1pCouI)
+[![Video Walkthrough](https://img.shields.io/badge/YouTube-Video%20Demo-red?logo=youtube&logoColor=white)](https://youtu.be/D4Vc1PeqGnk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **An autonomous, privacy-preserving transit safety agent pairing Prior Labs TabPFN Bayesian tabular foundation models with SerpApi real-time Google Search transit intelligence to prevent college students from getting stranded at bus turnstiles.**
 
-[📺 Video Demo](https://youtu.be/XJ_Dj1pCouI) • [🚀 Quickstart](#-quickstart) • [📐 Architecture](#-system-architecture) • [📊 TabPFN Foundation Model](#-prior-labs-tabpfn-foundation-model) • [🔍 SerpApi Grounding](#-serpapi-live-transit-grounding) • [🧪 Testing](#-testing--verification)
+[📺 Video Demo](https://youtu.be/D4Vc1PeqGnk) • [🚀 Quickstart](#-quickstart) • [📐 Architecture](#-system-architecture) • [📊 TabPFN Foundation Model](#-prior-labs-tabpfn-foundation-model) • [🔍 SerpApi Grounding](#-serpapi-live-transit-grounding) • [🧪 Testing](#-testing--verification)
 
 </div>
 
@@ -58,9 +58,9 @@ Naive alerts like *"alert whenever balance is below ₹50"* induce severe **noti
 
 Watch the complete technical walkthrough and multi-scenario demonstration on YouTube:
 
-[![KTCL CommuteShield Video Demo](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/CommuteShield_title_card_authentic.png)](https://youtu.be/XJ_Dj1pCouI)
+[![KTCL CommuteShield Video Demo](https://raw.githubusercontent.com/Labreo/KTCL-CommuteShield/main/assets/CommuteShield_title_card_authentic.png)](https://youtu.be/D4Vc1PeqGnk)
 
-🔗 **YouTube Link**: [https://youtu.be/XJ_Dj1pCouI](https://youtu.be/XJ_Dj1pCouI)
+🔗 **YouTube Link**: [https://youtu.be/D4Vc1PeqGnk](https://youtu.be/D4Vc1PeqGnk)
 
 ---
 
